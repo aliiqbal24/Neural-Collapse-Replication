@@ -1,60 +1,39 @@
 # Neural Collapse Replication
 
-This repository contains a paper presentation and replication project on
-**Neural Collapse**, a phenomenon where deep classifier features and final-layer
-weights converge to a highly structured geometry near the end of training.
+An exploration of how a classifier's learned features and final-layer weights develop structure during training. I studied Neural Collapse through a paper presentation, a technical report, and a ResNet-18 replication on MNIST.
 
-It includes replication code, as well as my more technical report and presentation slides
+**[Read the report](Project_Report.pdf)** · [Open the notebook](neuralcollapse.ipynb) · [Open in Colab](https://colab.research.google.com/github/aliiqbal24/Neural-Collapse-Replication/blob/main/neuralcollapse.ipynb)
 
-The project focuses on reproducing Neural Collapse behavior on MNIST with a
-small ResNet-18 setup. The notebook trains the model with either cross-entropy
-or MSE loss, then tracks the standard NC1-NC4 measurements and related MSE loss
-decomposition during training.
+## The question
 
-## Companion Essay
+Accuracy is only one view of a trained classifier. Neural Collapse asks what happens to the geometry of its internal representations near the end of training. This project tracks the NC1–NC4 measurements and related MSE decomposition, with configurable cross-entropy and MSE objectives.
 
-> **Neural Collapse, in plain language**
->
-> I also wrote a less technical, more poetic reflection on Neural Collapse, its
-> implications, and why the phenomenon matters beyond the replication details.
->
-> [Read the X/Twitter article](https://x.com/TheAli_Iqbal/status/2052066612162003396?s=20)
+## A window into the experiment
 
-## Repository Contents
+![Training curve from the final saved figure group](docs/images/saved-early.png)
 
-- `neuralcollapse.ipynb` - main replication notebook with training, analysis,
-  and plotting code.
-- `ProjectReport.pdf` - written project report summarizing the paper,
-  replication setup, results, and discussion.
-- `Presentation.pptx` - slide deck for the paper presentation.
+![Last saved figure in the notebook](docs/images/saved-late.png)
 
-## Running the Replication
+*These are selected saved PNG figures extracted from the committed notebook, not newly generated results. Consult the notebook cells and report for metric definitions, experiment conditions, and interpretation. Saved outputs may reflect earlier executions and should not be assumed to match the current configuration.*
 
-Open `neuralcollapse.ipynb` in Google Colab or Jupyter. A GPU runtime is
-recommended but not needed for the full experiment.
+## Reproduce
 
-The notebook downloads MNIST automatically and supports two modes:
+Use Jupyter or Colab with Python 3.12 and the tested PyTorch/torchvision pair. The notebook uses PyTorch, torchvision, NumPy, SciPy, Matplotlib, tqdm, and IPython.
 
-- `debug = True` for a quick test run.
-- `debug = False` for the full training run.
+```bash
+python -m venv .venv
+# Activate the environment using your platform's activation command.
+pip install torch==2.8.0 torchvision==0.23.0 --index-url https://download.pytorch.org/whl/cpu
+pip install -r requirements.txt
+jupyter notebook neuralcollapse.ipynb
+```
 
-To compare objectives, set `loss_name` to either:
+`debug = True` shortens batches per epoch; the configured experiment still spans 350 epochs. For a bounded smoke run, use one epoch and `epoch_list = [1]`. Use `debug = False` for the full experiment. Change `loss_name` between `MSELoss` and `CrossEntropyLoss` to compare objectives. The notebook selects CUDA when available and otherwise uses CPU; a GPU is useful for full training.
 
-- `MSELoss`
-- `CrossEntropyLoss`
+## What this contributes
 
-## Requirements
+My work here is a replication and explanation of published research, rather than a claim to have discovered Neural Collapse. The report develops the technical discussion; the notebook makes the training and analysis inspectable. Experiments are stochastic, and this repository does not promise bit-for-bit reproduction or generalization beyond the recorded setup.
 
-The notebook uses Python 3 with:
+The notebook references the original work by Papyan, Han, and Donoho and subsequent Neural Collapse research. See its references and the report for attribution.
 
-- PyTorch
-- torchvision
-- NumPy
-- SciPy
-- Matplotlib
-- tqdm
-
-## References
-
-The replication is based on the Neural Collapse papers cited in the notebook,
-including Papyan, Han, and Donoho's original Neural Collapse work
+For a less technical reflection: [Neural Collapse, in plain language](https://x.com/TheAli_Iqbal/status/2052066612162003396).
